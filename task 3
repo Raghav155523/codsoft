@@ -1,0 +1,162 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <limits> // Required for numeric_limits
+
+// --- Data Structure ---
+// Represents a single task in the to-do list
+struct Task {
+    std::string description;
+    bool isCompleted;
+};
+
+// --- Global "Database" ---
+// A vector to store all the tasks.
+std::vector<Task> tasks;
+
+// --- Function Prototypes ---
+void displayMenu();
+void addTask();
+void viewTasks();
+void markTaskCompleted();
+void removeTask();
+
+// --- Main Function: The entry point of the program ---
+int main() {
+    int choice;
+
+    do {
+        displayMenu();
+        std::cout << "Enter your choice: ";
+
+        // Basic input validation
+        while (!(std::cin >> choice)) {
+            std::cout << "Invalid input. Please enter a number: ";
+            std::cin.clear(); // Clear error flags
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Discard bad input
+        }
+        
+        // Ignore the rest of the line to handle trailing characters
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+        switch (choice) {
+            case 1:
+                addTask();
+                break;
+            case 2:
+                viewTasks();
+                break;
+            case 3:
+                markTaskCompleted();
+                break;
+            case 4:
+                removeTask();
+                break;
+            case 5:
+                std::cout << "Exiting the program. Goodbye!" << std::endl;
+                break;
+            default:
+                std::cout << "Invalid choice. Please try again." << std::endl;
+        }
+
+        if (choice != 5) {
+            std::cout << "\nPress Enter to continue...";
+            std::cin.get();
+        }
+
+    } while (choice != 5);
+
+    return 0;
+}
+
+// --- Function Implementations ---
+
+// Displays the main menu to the user
+void displayMenu() {
+    // Corrected line: Explicitly ignore the return value of system()
+    (void)system("cls || clear"); // Clear the console screen (works on Windows and Linux/Mac)
+    std::cout << "========================\n";
+    std::cout << "      TO-DO LIST\n";
+    std::cout << "========================\n";
+    std::cout << "1. Add Task\n";
+    std::cout << "2. View Tasks\n";
+    std::cout << "3. Mark Task as Completed\n";
+    std::cout << "4. Remove Task\n";
+    std::cout << "5. Exit\n";
+    std::cout << "------------------------\n";
+}
+
+// Adds a new task to the list
+void addTask() {
+    std::string description;
+    std::cout << "--- Add a New Task ---\n";
+    std::cout << "Enter the task description: ";
+    std::getline(std::cin, description);
+
+    Task newTask = {description, false}; // New tasks are pending by default
+    tasks.push_back(newTask);
+
+    std::cout << "Task added successfully!" << std::endl;
+}
+
+// Displays all tasks with their status
+void viewTasks() {
+    std::cout << "--- Your Tasks ---\n";
+    if (tasks.empty()) {
+        std::cout << "Your to-do list is empty." << std::endl;
+    } else {
+        for (size_t i = 0; i < tasks.size(); ++i) {
+            std::cout << i + 1 << ". "
+                      << (tasks[i].isCompleted ? "[X] " : "[ ] ") // Show [X] for completed, [ ] for pending
+                      << tasks[i].description << std::endl;
+        }
+    }
+}
+
+// Marks a specific task as completed
+void markTaskCompleted() {
+    if (tasks.empty()) {
+        std::cout << "No tasks to mark. The list is empty." << std::endl;
+        return;
+    }
+
+    std::cout << "--- Mark Task as Completed ---\n";
+    viewTasks(); // Show the list first
+    std::cout << "Enter the number of the task to mark as completed: ";
+    
+    int taskNumber;
+    std::cin >> taskNumber;
+
+    if (std::cin.fail() || taskNumber < 1 || taskNumber > tasks.size()) {
+        std::cout << "Invalid task number." << std::endl;
+        std::cin.clear();
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    } else {
+        tasks[taskNumber - 1].isCompleted = true;
+        std::cout << "Task marked as completed!" << std::endl;
+    }
+}
+
+// Removes a specific task from the list
+void removeTask() {
+    if (tasks.empty()) {
+        std::cout << "No tasks to remove. The list is empty." << std::endl;
+        return;
+    }
+
+    std::cout << "--- Remove a Task ---\n";
+    viewTasks(); // Show the list first
+    std::cout << "Enter the number of the task to remove: ";
+
+    int taskNumber;
+    std::cin >> taskNumber;
+
+    if (std::cin.fail() || taskNumber < 1 || taskNumber > tasks.size()) {
+        std::cout << "Invalid task number." << std::endl;
+        std::cin.clear();
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    } else {
+        tasks.erase(tasks.begin() + (taskNumber - 1));
+        std::cout << "Task removed successfully!" << std::endl;
+    }
+}
