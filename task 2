@@ -1,0 +1,63 @@
+#include <iostream> 
+
+int main() {
+    
+    int choice;
+    double num1, num2;
+    char again; 
+    do {
+        
+        std::cout << "Select operation:" << std::endl;
+        std::cout << "1. Addition (+)" << std::endl;
+        std::cout << "2. Subtraction (-)" << std::endl;
+        std::cout << "3. Multiplication (*)" << std::endl;
+        std::cout << "4. Division (/)" << std::endl;
+        std::cout << "Enter choice (1/2/3/4): ";
+        std::cin >> choice;
+
+        
+        std::cout << "Enter two numbers: ";
+        std::cin >> num1 >> num2;
+
+        
+        switch (choice) {
+            case 1: // Addition
+                std::cout << "Result: " << num1 << " + " << num2 << " = " << (num1 + num2) << std::endl;
+                break;
+
+            case 2: // Subtraction
+                std::cout << "Result: " << num1 << " - " << num2 << " = " << (num1 - num2) << std::endl;
+                break;
+
+            case 3: // Multiplication
+                std::cout << "Result: " << num1 << " * " << num2 << " = " << (num1 * num2) << std::endl;
+                break;
+
+            case 4: // Division
+                
+                if (num2 != 0) {
+                    std::cout << "Result: " << num1 << " / " << num2 << " = " << (num1 / num2) << std::endl;
+                } else {
+                    std::cout << "Error! Division by zero is not allowed." << std::endl;
+                }
+                break;
+
+            
+            default:
+                std::cout << "Error! Invalid choice." << std::endl;
+                break;
+        }
+
+        
+        std::cout << "\nDo you want to perform another calculation? (y/n): ";
+        std::cin >> again;
+        std::cout << std::endl; 
+
+    } while (again == 'y' || again == 'Y'); 
+
+    std::cout << "Thank you for using the calculator. Goodbye!" << std::endl;
+
+    
+    return 0;
+}
+
